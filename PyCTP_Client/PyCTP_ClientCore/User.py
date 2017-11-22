@@ -13,7 +13,7 @@ from operator import itemgetter
 from datetime import datetime
 import copy
 from PyCTP_Trade import PyCTP_Trader_API
-from PySgit_Trade import PySgit_Trade_API
+from PyQdp_Trade import PyQdpt_Trade_API
 import Utils
 from pandas import DataFrame, Series
 import queue
@@ -186,7 +186,7 @@ class User():
 
     # 创建sgit交易
     def create_trade_sgit(self):
-        self.sgit_trader = PySgit_Trade_API(self.__FrontAddress_sgit,
+        self.sgit_trader = PyQdpt_Trade_API(self.__FrontAddress_sgit,
                                             self.__BrokerID_sgit,
                                             self.__user_id_sgit,
                                             self.__Password_sgit)

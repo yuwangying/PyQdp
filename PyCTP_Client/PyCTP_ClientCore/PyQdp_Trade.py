@@ -9,20 +9,20 @@ import pyctp
 import copy
 
 
-class PySgit_Trade_API(pyctp.CSgitFtdcTraderSpi):
+class PyQdpt_Trade_API(pyctp.CQdpFtdcTraderSpi):
     request_id = 0
 
     def __init__(self, frontaddress, broker_id, user_id, password):
-        pyctp.CSgitFtdcTraderSpi.__init__(self)
+        pyctp.CQdpFtdcTraderSpi.__init__(self)
 
         self.frontaddress = frontaddress
         self.broker_id = broker_id
         self.user_id = user_id
         self.password = password
 
-        self.api = pyctp.CSgitFtdcTraderApi_CreateFtdcTraderApi("./conn/sgit_td/")
-        self.api.SubscribePrivateTopic(pyctp.Sgit_TERT_RESTART)
-        self.api.SubscribePublicTopic(pyctp.Sgit_TERT_RESTART)
+        self.api = pyctp.CQdpFtdcTraderApi_CreateFtdcTraderApi("./conn/sgit_td/")
+        self.api.SubscribePrivateTopic(pyctp.QDP_TERT_RESTART)
+        self.api.SubscribePublicTopic(pyctp.QDP_TERT_RESTART)
         self.api.RegisterSpi(self)
         self.api.RegisterFront(self.frontaddress)
         self.api.Init(True)  # 对应spi方法OnFrontConnected
@@ -34,28 +34,28 @@ class PySgit_Trade_API(pyctp.CSgitFtdcTraderSpi):
         self.api.Join()
 
     def Login(self):
-        field = pyctp.CSgitFtdcReqUserLoginField()
+        field = pyctp.CQdpFtdcReqUserLoginField()
         field.BrokerID = self.broker_id
         field.UserID = self.user_id
         field.Password = self.password
         request_id = 1
-        print(">>>PySgit_Trade_API.Login() called")
+        print(">>>PyQdp_Trade_API.Login() called")
         self.api.ReqUserLogin(field, request_id)
 
     def OnFrontConnected(self):
-        print(">>>PySgit_Trade_API.OnFrontConnected() called")
+        print(">>>PyQdp_Trade_API.OnFrontConnected() called")
         self.Login()
 
     def OnRspUserLogin(self, pRspUserLogin, pRspInfo, nRequestID, bIsLast):
-        print(">>>PySgit_Trade_API.OnRspUserLogin() called")
+        print(">>>PyQdp_Trade_API.OnRspUserLogin() called")
         self.api.Ready()
 
     def OnRtnOrder(self, OrderField, pRspInfo):
-        # print(">>>PySgit_Trade_API.OnRtnOrder() called")
+        # print(">>>PyQdp_Trade_API.OnRtnOrder() called")
         if pRspInfo.ErrorID == 0:  # 报单成功
             pass
         else:  # 报单失败
-            print(">>>PySgit_Trade_API.OnRtnOrder() ErrorID =", pRspInfo.ErrorID)
+            print(">>>PyQdp_Trade_API.OnRtnOrder() ErrorID =", pRspInfo.ErrorID)
             # return
 
         Order = {
@@ -124,13 +124,13 @@ class PySgit_Trade_API(pyctp.CSgitFtdcTraderSpi):
             # 'IPAddress': OrderField.IPAddress,  # IP地址
             # 'MacAddress': OrderField.MacAddress  # Mac地址
         }
-        # print(">>>PySgit_Trade_API.OnRtnOrder() Order =", Order)
-        # print(">>>PySgit_Trade_API.OnRtnOrder() Order['OrderRef'] =", Order['OrderRef'])
+        # print(">>>PyQdp_Trade_API.OnRtnOrder() Order =", Order)
+        # print(">>>PyQdp_Trade_API.OnRtnOrder() Order['OrderRef'] =", Order['OrderRef'])
         # print(">>>时序测试 OrderRef =", Order['OrderRef'], "OnRtnOrder()")
         self.__user.OnRtnOrder(Order)  # 转回调给User类的OnRtnOrder
 
     def OnRtnTrade(self, TradeField):
-        # print(">>>PySgit_Trade_API.OnRtnTrade() called")
+        # print(">>>PyQdp_Trade_API.OnRtnTrade() called")
         date = datetime.now().strftime('%Y%m%d')
         Trade = {
             'BrokerID': TradeField.BrokerID,  # 经纪公司代码
@@ -166,12 +166,12 @@ class PySgit_Trade_API(pyctp.CSgitFtdcTraderSpi):
             'BrokerOrderSeq': TradeField.BrokerOrderSeq,  # 经纪公司报单编号
             'TradeSource': TradeField.TradeSource  # 成交来源
         }
-        # print(">>>PySgit_Trade_API.OnRtnTrade() Trade =", Trade)
+        # print(">>>PyQdp_Trade_API.OnRtnTrade() Trade =", Trade)
         self.__user.OnRtnTrade(Trade)  # 转到user回调函数
 
     # 撤单回报
     def OnRspOrderAction(self, pInputOrderAction, pRspInfo, nRequestID, bIsLast):
-        # print(">>>PySgit_Trade_API.OnRspOrderAction() called")
+        # print(">>>PyQdp_Trade_API.OnRspOrderAction() called")
         # 撤单成功
         if pRspInfo.ErrorID == 0:
             if pInputOrderAction is not None:
@@ -191,14 +191,14 @@ class PySgit_Trade_API(pyctp.CSgitFtdcTraderSpi):
                     'UserID': pInputOrderAction.UserID,
                     'InstrumentID': pInputOrderAction.InstrumentID
                 }
-                # print(">>>PySgit_Trade_API.OnRspOrderAction() OrderAction =", OrderAction)
+                # print(">>>PyQdp_Trade_API.OnRspOrderAction() OrderAction =", OrderAction)
                 # print(">>>时序测试 OrderRef =", OrderAction['OrderRef'], "OnRspOrderAction()")
                 self.__user.OnRspOrderAction(OrderAction)  # 转到user回调函数
             else:
-                # print(">>>PySgit_Trade_API.OnRspOrderAction() pInputOrderAction is None")
+                # print(">>>PyQdp_Trade_API.OnRspOrderAction() pInputOrderAction is None")
                 pass
         # 撤单失败，不需要处理
         else:
             print_str = pRspInfo.ErrorID
             # print_str = pRspInfo.ErrorMsg  # pRspInfo中没有ErrorMsg，该代码导致user进程异常退出
-            # print(">>>PySgit_Trade_API.OnRspOrderAction() 撤单失败，ErrorID =", print_str)
+            # print(">>>PyQdp_Trade_API.OnRspOrderAction() 撤单失败，ErrorID =", print_str)

@@ -14,19 +14,6 @@ import multiprocessing
 import win32api
 import shutil
 import datetime
-# from TimerThread import TimerThread
-# from multiprocessing import Process, Manager, Value, Array, Queue, Pipe
-# from CTPManager import CTPManager
-# from QAccountWidget import QAccountWidget
-# from QNewStrategy import QNewStrategy
-# from SocketManager import SocketManager
-# import Utils
-# import time
-# from MarketManager import MarketManager
-# from Trader import Trader
-# from User import User
-# from MessageBox import MessageBox
-
 
 class ClientMain(QtCore.QObject):
 
@@ -68,25 +55,8 @@ class ClientMain(QtCore.QObject):
     def set_CTPManager(self, obj_CTPManager):
         self.__ctp_manager = obj_CTPManager
 
-    # # 设置当前显示在最前端窗口对象为本类属性
-    # def set_showQAccountWidget(self, obj_QAccountWidget):
-    #     self.__showQAccountWidget = obj_QAccountWidget
-    #     # 绑定信号：当前最前端窗口对象(通过信槽绑定的标志来判断，不能重复绑定信号槽)
-    #     if self.__showQAccountWidget.get_signal_pushButton_set_position_setEnabled_connected() is False:
-    #         self.signal_pushButton_set_position_setEnabled.connect(self.__showQAccountWidget.on_pushButton_set_position_active)  # , QtCore.Qt.UniqueConnection
-    #         self.__showQAccountWidget.set_signal_pushButton_set_position_setEnabled_connected(True)  # 信号槽绑定状态设置为True
-    #         # print(">>> ClientMain.set_showQAccountWidget() 绑定信号槽，widget_name=", self.__showQAccountWidget.get_widget_name())
-
     def get_showQAccountWidget(self):
         return self.__showQAccountWidget
-
-    # def set_hideQAccountWidget(self, obj_QAccountWidget):
-    #     self.__hideQAccountWidget = obj_QAccountWidget
-    #     # 解绑信号：隐藏的窗口
-    #     if self.__hideQAccountWidget.get_signal_pushButton_set_position_setEnabled_connected():
-    #         self.signal_pushButton_set_position_setEnabled.disconnect(self.__hideQAccountWidget.on_pushButton_set_position_active)
-    #         self.__hideQAccountWidget.set_signal_pushButton_set_position_setEnabled_connected(False)  # 信号槽绑定状态设置为False
-    #         # print(">>> ClientMain.set_hideQAccountWidget() 解绑信号槽，widget_name=", self.__hideQAccountWidget.get_widget_name())
 
     def get_hideQAccountWidget(self):
         return self.__hideQAccountWidget
