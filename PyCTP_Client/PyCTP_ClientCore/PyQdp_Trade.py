@@ -25,7 +25,7 @@ class PyQdpt_Trade_API(pyctp.CQdpFtdcTraderSpi):
         self.api.SubscribePublicTopic(pyctp.QDP_TERT_RESTART)
         self.api.RegisterSpi(self)
         self.api.RegisterFront(self.frontaddress)
-        self.api.Init(True)  # 对应spi方法OnFrontConnected
+        self.api.Init()  # 对应spi方法OnFrontConnected
 
     def set_user(self, obj_user):
         self.__user = obj_user
