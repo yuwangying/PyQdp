@@ -89,7 +89,7 @@ class SocketManager(QtCore.QThread):
         socket_value = self.__sockfd.getsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE)
         if socket_value == 0:
             self.__sockfd.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-            self.__sockfd.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 10000, 3000))# 激活心跳功能，10秒激活时间，频率3秒
+            self.__sockfd.ioctl(socket.SIO_KEEPALIVE_VALS, (1, 10000, 3000))  # 激活心跳功能，10秒激活时间，频率3秒
         self.__event = threading.Event()  # 初始化协程threading.Event()
         self.__msg_ref = 0  # 发送消息引用
         self.__RecvN = True  # RecvN方法运行状态，True正常，False异常
@@ -1114,7 +1114,7 @@ class SocketManager(QtCore.QThread):
         self.data_structure()  # 组织和创建客户端运行数据结构
         self.create_user_process()  # 创建user进程
         self.signal_q_ctp_show.emit()  # 显示主窗口，显示qctp，显示QCTP
-        self.__thread_heartbeat.start()  # 开始线程：开始心跳
+        # self.__thread_heartbeat.start()  # 开始线程：开始心跳
         # self.__q_ctp.show()  # 显示主窗口
         # self.__q_login.hide()  # 隐藏登录窗口
 
